@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+  title = 'LSC app';
+  version = 'Versión actual: 1.0';
 }
+export class TooltipOverviewExample {}
