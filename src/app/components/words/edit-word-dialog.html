@@ -1,0 +1,32 @@
+<h1 mat-dialog-title align="center">Editar palabra</h1>
+<div mat-dialog-content class="container">
+  <!-- Edit palabra -->
+  <mat-form-field width = "200px">
+    <input matInput type="text" placeholder="Palabra" [(ngModel)]="data.palabra" />
+    <button mat-button *ngIf="data.palabra" matSuffix mat-icon-button aria-label="Clear" (click)="data.palabra=''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <!-- Edit nivel y lección -->
+  <mat-form-field>
+      <mat-select placeholder="Nivel y lección" [formControl]="levelControl" required>
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let level_lesson of levels_lessons" [value]="level_lesson">
+          {{level_lesson.lesson}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="levelControl.hasError('required')">Por favor elija un nivel y lección</mat-error>
+      <mat-hint>{{levelControl.value?.level}}</mat-hint>
+    </mat-form-field>
+    <p>{{selectedValue}}</p>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Actualizar</button>
+</div>
+
+
+<!-- Copyright 2018 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->

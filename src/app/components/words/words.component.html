@@ -14,25 +14,25 @@
             </mat-form-field>
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-              <!-- Position Column -->
+              <!-- Palabra Column -->
               <ng-container matColumnDef="Palabra">
                 <th mat-header-cell *matHeaderCellDef> Palabra </th>
                 <td mat-cell *matCellDef="let element"> {{element.word}} </td>
               </ng-container>
 
-              <!-- Name Column -->
+              <!-- Nivel Column -->
               <ng-container matColumnDef="Nivel">
                 <th mat-header-cell *matHeaderCellDef> Nivel </th>
                 <td mat-cell *matCellDef="let element"> {{element.level}} </td>
               </ng-container>
 
-              <!-- Weight Column -->
+              <!-- Lección Column -->
               <ng-container matColumnDef="Leccion">
                 <th mat-header-cell *matHeaderCellDef> Lección </th>
                 <td mat-cell *matCellDef="let element"> {{element.lesson}} </td>
               </ng-container>
 
-              <!-- Symbol Column -->
+              <!-- Multimedia Column -->
               <ng-container matColumnDef="Media">
                 <th mat-header-cell *matHeaderCellDef> Multimedia </th>
                 <td mat-cell *matCellDef="let element">
@@ -42,15 +42,15 @@
                 </td>
               </ng-container>
 
-              <!-- Function Column -->
+              <!-- Funcion Column -->
               <ng-container matColumnDef="Funcion">
-                <th mat-header-cell *matHeaderCellDef> </th>
+                <th mat-header-cell *matHeaderCellDef> <!-- Funcion --></th>
                 <td mat-cell *matCellDef="let element">
-                  <button mat-icon-button color="basic" matTooltip="Editar">
-                    <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                  <button mat-icon-button color="basic" matTooltip="Editar" (click)="editDialog(element)">
+                    <mat-icon>edit</mat-icon>
                   </button>
                   <button mat-icon-button color="warn" matTooltip="Eliminar">
-                    <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
+                    <mat-icon>delete</mat-icon>
                   </button>
                 </td>
               </ng-container>

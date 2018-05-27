@@ -1,14 +1,16 @@
-<h1 mat-dialog-title align="center">{{data.palabra}}</h1>
-<mat-grid-list cols="2">
-  <mat-grid-tile>
-    <video width="300" controls autoplay loop>
-      <source src="{{data.videoURL}}" type="video/mp4"> Video no soportado por su navegardor.
-    </video>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <img src="{{data.pictureURL}}" alt="Imagen no encontrada." width="300">
-  </mat-grid-tile>
-</mat-grid-list>
+<mat-card>
+  <h1 mat-dialog-title align="center">{{data.palabra}}</h1>
+</mat-card>
+  <mat-grid-list cols="2">
+    <mat-grid-tile>
+      <video width="300" controls autoplay loop>
+        <source src="{{data.videoURL}}" type="video/mp4"> Video no soportado por su navegardor.
+      </video>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <img src="{{data.pictureURL}}" alt="Imagen no encontrada." width="300">
+    </mat-grid-tile>
+  </mat-grid-list>
 <div mat-dialog-actions align="center">
   <button mat-raised-button color="warn" [mat-dialog-close] cdkFocusInitial>Cerrar</button>
 </div>
