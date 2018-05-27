@@ -5,11 +5,10 @@ import { AppComponent } from './app.component';
 import { WordsComponent } from './components/words/words.component';
 // tslint:disable-next-line:max-line-length
 import { DialogOverviewExampleComponent, DialogOverviewExampleDialog } from './components/dialog-overview-example/dialog-overview-example.component';
-import { WordsService } from './services/words.service';
+import { ProxyWordsService } from './services/proxy-words.service';
 
 /** Angular Material */
 import { CdkTableModule } from '@angular/cdk/table';
-import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatAutocompleteModule,
@@ -51,7 +50,7 @@ import {
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   exports: [
@@ -108,7 +107,7 @@ export class DemoMaterialModule {}
     ReactiveFormsModule,
   ],
   entryComponents: [DialogOverviewExampleComponent, DialogOverviewExampleDialog],
-  providers: [],
+  providers: [ProxyWordsService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

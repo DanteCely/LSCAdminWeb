@@ -1,33 +1,85 @@
 <div>
-    <mat-card>
-        <mat-card-content>
-          <h2 class="example-h2">Gestor de palabras</h2>
-          <mat-tab-group class="tab-group">
-            <mat-tab label="Tab 1">
-              <ng-template mat-tab-label>
-                <mat-icon>view_list</mat-icon>
-              </ng-template>
-              <div class="tab-content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue.
-                Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus.
-                In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec,
-                feugiat ultricies mi. Aliquam erat volutpat. Nam placerat, tortor in ultrices porttitor,
-                orci enim rutrum enim, vel tempor sapien arcu a tellus.
-              </div>
-            </mat-tab>
-            <mat-tab label="Tab 2">
-              <ng-template mat-tab-label>
-                <mat-icon>library_add</mat-icon>
-              </ng-template>
-              <div class="tab-content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue.
-                Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus.
-                In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec,
-                feugiat ultricies mi. Aliquam erat volutpat. Nam placerat, tortor in ultrices porttitor,
-                orci enim rutrum enim, vel tempor sapien arcu a tellus.
-              </div>
-            </mat-tab>
-          </mat-tab-group>
-        </mat-card-content>
-      </mat-card>
+  <mat-card>
+    <mat-card-content>
+      <h2 class="example-h2">Gestor de palabras</h2>
+      <mat-tab-group class="tab-group">
+        <mat-tab label="Tab 1">
+          <ng-template mat-tab-label>
+            <mat-icon>view_list</mat-icon>
+          </ng-template>
+          <div class="tab-content">
+            <!-- Table initial -->
+            <mat-form-field>
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrar">
+            </mat-form-field>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+              <!-- Position Column -->
+              <ng-container matColumnDef="Palabra">
+                <th mat-header-cell *matHeaderCellDef> Palabra </th>
+                <td mat-cell *matCellDef="let element"> {{element.word}} </td>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="Nivel">
+                <th mat-header-cell *matHeaderCellDef> Nivel </th>
+                <td mat-cell *matCellDef="let element"> {{element.level}} </td>
+              </ng-container>
+
+              <!-- Weight Column -->
+              <ng-container matColumnDef="Leccion">
+                <th mat-header-cell *matHeaderCellDef> Lección </th>
+                <td mat-cell *matCellDef="let element"> {{element.lesson}} </td>
+              </ng-container>
+
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="Video">
+                <th mat-header-cell *matHeaderCellDef> Video </th>
+                <td mat-cell *matCellDef="let element">
+                  <a mat-icon-button color="primary" matTooltip="Reproducir" href="{{element.video}}" target="_blank">
+                    <mat-icon>play_circle_filled</mat-icon>
+                  </a>
+                </td>
+              </ng-container>
+
+              <!-- Imagen Column -->
+              <ng-container matColumnDef="Imagen">
+                <th mat-header-cell *matHeaderCellDef> Imagen </th>
+                <td mat-cell *matCellDef="let element">
+                  <a mat-icon-button color="accent" matTooltip="Ver" href="{{element.picture}}" target="_blank">
+                    <mat-icon>photo</mat-icon>
+                  </a>
+                </td>
+              </ng-container>
+
+              <!-- Function Column -->
+              <ng-container matColumnDef="Funcion">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-icon-button color="basic" matTooltip="Editar">
+                    <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" matTooltip="Eliminar">
+                    <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+          </div>
+        </mat-tab>
+        <mat-tab label="Tab 2">
+          <ng-template mat-tab-label>
+            <mat-icon>library_add</mat-icon>
+          </ng-template>
+          <div class="tab-content">
+            <app-dialog-overview-example></app-dialog-overview-example>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
 </div>
