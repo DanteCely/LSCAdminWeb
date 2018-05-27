@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 /** Components and Services */
 import { AppComponent } from './app.component';
-import { WordsComponent } from './components/words/words.component';
+import { WordsComponent, ShowVideoDialog } from './components/words/words.component';
 // tslint:disable-next-line:max-line-length
 import { DialogOverviewExampleComponent, DialogOverviewExampleDialog } from './components/dialog-overview-example/dialog-overview-example.component';
 import { ProxyWordsService } from './services/proxy-words.service';
@@ -96,7 +96,7 @@ export class DemoMaterialModule {}
 
 @NgModule({
   // tslint:disable-next-line:max-line-length
-  declarations: [AppComponent, WordsComponent, DialogOverviewExampleComponent, DialogOverviewExampleDialog],
+  declarations: [AppComponent, WordsComponent, ShowVideoDialog, DialogOverviewExampleComponent, DialogOverviewExampleDialog],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -106,7 +106,7 @@ export class DemoMaterialModule {}
     MatNativeDateModule,
     ReactiveFormsModule,
   ],
-  entryComponents: [DialogOverviewExampleComponent, DialogOverviewExampleDialog],
+  entryComponents: [ShowVideoDialog, DialogOverviewExampleComponent, DialogOverviewExampleDialog],
   providers: [ProxyWordsService],
   bootstrap: [AppComponent]
 })
