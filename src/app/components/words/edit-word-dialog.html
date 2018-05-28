@@ -24,27 +24,32 @@
   </mat-form-field>
   <br>
   <!-- Edit video -->
-  <div align="center">
+  <div>
     <input style="display: none" type="file" (change)="onFileVideo($event)" #fileInput1>
-    <button mat-raised-button matTooltip="Cargar video" matTooltipPosition="right" (click)="fileInput1.click()" >
+    <button mat-button color="primary" matTooltip="Cargar video" matTooltipPosition="right" (click)="fileInput1.click()" >
       <mat-icon>play_circle_filled</mat-icon>
       {{mediaWord.videoName}}
     </button>
   </div>
   <br>
   <!-- Edit picure -->
-  <div align="center">
+  <div>
     <input style="display: none" type="file" (change)="onFilePicture($event)" #fileInput2>
-    <button mat-raised-button matTooltip="Cargar imagen" matTooltipPosition="right" (click)="fileInput2.click()">
+    <button mat-button color="primary" matTooltip="Cargar imagen" matTooltipPosition="right" (click)="fileInput2.click()">
       <mat-icon>photo</mat-icon>
       {{mediaWord.pictureName}}
     </button>
   </div>
   <br>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancelar</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Actualizar</button>
+<div mat-dialog-actions align="center">
+  <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
+  <div *ngIf="validar(); else elseBlock">
+    <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial>Actualizar</button>
+  </div>
+  <ng-template #elseBlock>
+    <button mat-raised-button disabled>Actualizar</button>
+  </ng-template>
 </div>
 
 

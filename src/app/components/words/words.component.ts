@@ -78,7 +78,7 @@ export class WordsComponent implements OnInit {
   // ******* Modal Edit *******
   editDialog(word: Word): void {
     const dialogRef = this.dialog.open(EditWordDialog, {
-      width: '700px',
+      width: '400px',
       data: {
         palabra: word.word,
         nivel: word.level,
@@ -154,6 +154,9 @@ export class EditWordDialog {
   onNoClick(): void {
     this.dialogRef.close();
   }
+  onClick(): void {
+    this.dialogRef.close();
+  }
 
   onFileVideo(event) {
     // console.log(event.target.files[0]);
@@ -173,5 +176,14 @@ export class EditWordDialog {
     } else {
       this.mediaWord.pictureName = '';
     }
+  }
+
+  validar () {
+    // Validar campos completos
+
+    // Validar tipos de archivo
+
+    // retornar validación
+    return true;
   }
 }
