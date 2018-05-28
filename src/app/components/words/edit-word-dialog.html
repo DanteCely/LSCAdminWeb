@@ -44,8 +44,8 @@
 </div>
 <div mat-dialog-actions align="center">
   <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
-  <div *ngIf="validar(); else elseBlock">
-    <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial>Actualizar</button>
+  <div *ngIf="validar( data ); else elseBlock">
+    <button mat-raised-button (click)="addFiles( data )" [mat-dialog-close]="data" cdkFocusInitial>Actualizar</button>
   </div>
   <ng-template #elseBlock>
     <button mat-raised-button disabled>Actualizar</button>

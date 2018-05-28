@@ -81,10 +81,10 @@ export class WordsComponent implements OnInit {
       width: '400px',
       data: {
         palabra: word.word,
-        nivel: word.level,
-        leccion: word.lesson,
-        videoURL: word.video,
-        pictureURL: word.picture
+        nivel: '',
+        leccion: '',
+        videoURL: '',
+        pictureURL: ''
       }
     });
     let wordUpdate: Word = null;
@@ -92,6 +92,7 @@ export class WordsComponent implements OnInit {
       if (typeof result !== 'undefined') {
         wordUpdate = result;
         console.log(wordUpdate);
+        // Eliminar video y foto antigua
       }
     });
   }
@@ -144,46 +145,108 @@ export class EditWordDialog {
     { lesson: 'Tiempos', level: 'Predicados' }
   ];
   wordControl = new FormControl('', [Validators.required]);
+  TypeVideo = 'video/mp4';
+  TypePicture = 'image/jpeg';
+  ErrFileType = 'Archivo no aceptado';
+  ErrDescripVideo = 'El tipo de archivo tiene que ser .mp4';
+  ErrDescripPicture = 'El tipo de archivo tiene que ser .jpg';
 
   constructor(
+    private proxyService: ProxyWordsService,
     public dialogRef: MatDialogRef<EditWordDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public snackBar: MatSnackBar
   ) {
     ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: 'never' });
   }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 4000
+    });
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }
   onClick(): void {
-    this.dialogRef.close();
+    console.log(':)');
+
   }
 
   onFileVideo(event) {
-    // console.log(event.target.files[0]);
+    // Validar tipos de archivo .mp4
     if (event.target.files[0]) {
-      this.mediaWord.videoFile = <File>event.target.files[0];
-      this.mediaWord.videoName = event.target.files[0].name;
+      if (event.target.files[0].type === this.TypeVideo) {
+        this.mediaWord.videoFile = <File>event.target.files[0];
+        this.mediaWord.videoName = event.target.files[0].name;
+      } else {
+        this.openSnackBar(this.ErrFileType, this.ErrDescripVideo);
+      }
     } else {
+      this.mediaWord.videoFile = null;
       this.mediaWord.videoName = '';
     }
   }
 
   onFilePicture(event) {
-    // console.log(event.target.files[0]);
+    // Validar tipos de archivo
     if (event.target.files[0]) {
-      this.mediaWord.pictureFile = <File>event.target.files[0];
-      this.mediaWord.pictureName = event.target.files[0].name;
+      if (event.target.files[0].type === this.TypePicture) {
+        this.mediaWord.pictureFile = <File>event.target.files[0];
+        this.mediaWord.pictureName = event.target.files[0].name;
+      } else {
+        this.openSnackBar(this.ErrFileType, this.ErrDescripPicture);
+      }
     } else {
+      this.mediaWord.pictureFile = null;
       this.mediaWord.pictureName = '';
     }
   }
 
-  validar () {
+  validar(word) {
     // Validar campos completos
+    const goodWord = word.palabra !== '' && word.palabra !== null;
+    const goodLevel = word.nivel !== '' && word.nivel !== null;
+    const goodLesson = word.leccion !== '' && word.leccion !== null;
+    const goodVideo =
+      this.mediaWord.videoName !== '' && this.mediaWord.videoFile !== null;
+    const goodPicture =
+      this.mediaWord.pictureName !== '' && this.mediaWord.pictureFile !== null;
 
-    // Validar tipos de archivo
+      return goodWord && goodLevel && goodLesson && goodVideo && goodPicture;
+  }
 
-    // retornar validación
-    return true;
+  addFiles(word) {
+    // Video e imagen para agregar
+    const newVideo: FormData = new FormData();
+    const newPicture: FormData = new FormData();
+    // Cambiar nombre de video e imagen
+    this.mediaWord.videoName = `${word.palabra}.mp4`;
+    this.mediaWord.pictureName = `${word.palabra}.jpg`;
+    const espacios = ' ';
+    const nuevoValor = '+';
+    this.mediaWord.videoName.replace(espacios, nuevoValor);
+    this.mediaWord.pictureName.replace(espacios, nuevoValor);
+    console.log( this.mediaWord.videoName );
+    console.log( this.mediaWord.pictureName );
+/*
+    // Empacar video e imagen
+    newVideo.append( 'videoFile', this.mediaWord.videoFile, this.mediaWord.videoName.toLowerCase() );
+    newVideo.append( 'pictureFile', this.mediaWord.pictureFile, this.mediaWord.pictureName.toLowerCase() );
+    // agregar video e imagen para recibir URL (POST)
+    // ****** Agregar Imagen ******
+    this.proxyService.addPicture( newVideo ).subscribe(
+      result => {
+        if (result.code !== 200) {
+          console.log(result);
+        } else {
+        }
+      },
+      error => {
+        console.log(<any>error);
+      }
+    );
+    */
   }
 }
