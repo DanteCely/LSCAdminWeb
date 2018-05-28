@@ -1,25 +1,46 @@
 <h1 mat-dialog-title align="center">Editar palabra</h1>
 <div mat-dialog-content class="container">
   <!-- Edit palabra -->
-  <mat-form-field width = "200px">
-    <input matInput type="text" placeholder="Palabra" [(ngModel)]="data.palabra" />
+  <mat-form-field width="200px">
+    <input matInput type="text" placeholder="Palabra" [(ngModel)]="data.palabra" [formControl]="wordControl" />
+    <mat-hint></mat-hint>
+    <mat-error *ngIf="wordControl.hasError('required')"></mat-error>
     <button mat-button *ngIf="data.palabra" matSuffix mat-icon-button aria-label="Clear" (click)="data.palabra=''">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
+  <br>
   <!-- Edit nivel y lección -->
   <mat-form-field>
-      <mat-select placeholder="Nivel y lección" [formControl]="levelControl" required>
-        <mat-option>--</mat-option>
-        <mat-option *ngFor="let level_lesson of levels_lessons" [value]="level_lesson">
-          {{level_lesson.lesson}}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="levelControl.hasError('required')">Por favor elija un nivel y lección</mat-error>
-      <mat-hint>{{levelControl.value?.level}}</mat-hint>
-    </mat-form-field>
-    <p>{{selectedValue}}</p>
-
+    <mat-select placeholder="Nivel y lección" [formControl]="levelControl" required (selectionChange)="data.nivel = levelControl.value?.level"
+      (selectionChange)="data.leccion = levelControl.value?.lesson">
+      <mat-option>--</mat-option>
+      <mat-option *ngFor="let level_lesson of levels_lessons" [value]="level_lesson">
+        {{level_lesson.lesson}}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="levelControl.hasError('required')">Por favor elija un nivel y lección</mat-error>
+    <mat-hint>{{levelControl.value?.level}}</mat-hint>
+  </mat-form-field>
+  <br>
+  <!-- Edit video -->
+  <div align="center">
+    <input style="display: none" type="file" (change)="onFileVideo($event)" #fileInput1>
+    <button mat-raised-button matTooltip="Cargar video" matTooltipPosition="right" (click)="fileInput1.click()" >
+      <mat-icon>play_circle_filled</mat-icon>
+      {{mediaWord.videoName}}
+    </button>
+  </div>
+  <br>
+  <!-- Edit picure -->
+  <div align="center">
+    <input style="display: none" type="file" (change)="onFilePicture($event)" #fileInput2>
+    <button mat-raised-button matTooltip="Cargar imagen" matTooltipPosition="right" (click)="fileInput2.click()">
+      <mat-icon>photo</mat-icon>
+      {{mediaWord.pictureName}}
+    </button>
+  </div>
+  <br>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancelar</button>

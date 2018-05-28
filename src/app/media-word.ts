@@ -1,6 +1,6 @@
 export class MediaWord {
-  videoFile: File =  null;
-  videoName = '';
-  pictureFile: File = null;
-  pictureName: '';
+  videoFile: File;
+  videoName: string;
+  pictureFile: File;
+  pictureName: string;
 }

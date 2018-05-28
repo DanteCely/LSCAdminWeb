@@ -6,7 +6,7 @@ import {
   MAT_DIALOG_DATA,
   MatSnackBar
 } from '@angular/material';
-import {FormControl, Validators} from '@angular/forms';
+import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ProxyWordsService } from '../../services/proxy-words.service';
 import { Word } from '../../word';
 import { NewWord } from '../../new-word';
@@ -21,7 +21,6 @@ import { Test } from '../../test';
 export class WordsComponent implements OnInit {
   words: Word[];
   newWord: NewWord;
-  mediaWord: MediaWord;
 
   // ****** Table Elements ******
   displayedColumns = ['Palabra', 'Nivel', 'Leccion', 'Media', 'Funcion'];
@@ -56,7 +55,7 @@ export class WordsComponent implements OnInit {
 
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
-      duration: 2000,
+      duration: 2000
     });
   }
 
@@ -88,25 +87,14 @@ export class WordsComponent implements OnInit {
         pictureURL: word.picture
       }
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The edit-dialog was closed');
-      /*console.log(result.palabra);
-      console.log(result.nivel);
-      console.log(result.leccion);*/
+    let wordUpdate: Word = null;
+    dialogRef.afterClosed().subscribe((result: Word) => {
+      if (typeof result !== 'undefined') {
+        wordUpdate = result;
+        console.log(wordUpdate);
+      }
     });
   }
-
-  onFileVideo(event) {
-    // console.log(event.target.files[0]);
-    if (event.target.files[0]) {
-      this.mediaWord.videoFile = <File>event.target.files[0];
-      this.mediaWord.videoName = event.target.files[0].name;
-    } else {
-      this.mediaWord.videoName = '';
-    }
-  }
-
 }
 export class TooltipOverviewExample {}
 
@@ -137,26 +125,53 @@ export class ShowVideoDialog {
 
 // tslint:disable-next-line:component-class-suffix
 export class EditWordDialog {
+  mediaWord: MediaWord = {
+    videoFile: null,
+    videoName: '',
+    pictureFile: null,
+    pictureName: ''
+  };
   // ****** Validation Elements *******
   levelControl = new FormControl('', [Validators.required]);
   levels_lessons = [
-    {lesson: 'Abecedario', level: 'Abecedario y números'},
-    {lesson: 'Números', level: 'Abecedario y números'},
-    {lesson: 'Pronombres', level: 'Sustantivos'},
-    {lesson: 'Relaciones', level: 'Sustantivos'},
-    {lesson: 'Actividades cotidianas', level: 'Verbos'},
-    {lesson: 'En el estudio', level: 'Verbos'},
-    {lesson: 'Lugares', level: 'Predicados'},
-    {lesson: 'Tiempos', level: 'Predicados'},
+    { lesson: 'Abecedario', level: 'Abecedario y números' },
+    { lesson: 'Números', level: 'Abecedario y números' },
+    { lesson: 'Pronombres', level: 'Sustantivos' },
+    { lesson: 'Relaciones', level: 'Sustantivos' },
+    { lesson: 'Actividades cotidianas', level: 'Verbos' },
+    { lesson: 'En el estudio', level: 'Verbos' },
+    { lesson: 'Lugares', level: 'Predicados' },
+    { lesson: 'Tiempos', level: 'Predicados' }
   ];
-  selectedValue: string;
+  wordControl = new FormControl('', [Validators.required]);
 
   constructor(
     public dialogRef: MatDialogRef<EditWordDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
-
+  ) {
+    ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: 'never' });
+  }
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  onFileVideo(event) {
+    // console.log(event.target.files[0]);
+    if (event.target.files[0]) {
+      this.mediaWord.videoFile = <File>event.target.files[0];
+      this.mediaWord.videoName = event.target.files[0].name;
+    } else {
+      this.mediaWord.videoName = '';
+    }
+  }
+
+  onFilePicture(event) {
+    // console.log(event.target.files[0]);
+    if (event.target.files[0]) {
+      this.mediaWord.pictureFile = <File>event.target.files[0];
+      this.mediaWord.pictureName = event.target.files[0].name;
+    } else {
+      this.mediaWord.pictureName = '';
+    }
   }
 }
