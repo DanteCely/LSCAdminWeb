@@ -26,7 +26,7 @@
   <!-- Edit video -->
   <div>
     <input style="display: none" type="file" (change)="onFileVideo($event)" #fileInput1>
-    <button mat-button color="primary" matTooltip="Cargar video" matTooltipPosition="right" (click)="fileInput1.click()" >
+    <button mat-button color="primary" matTooltip="Cargar video" matTooltipPosition="right" (click)="fileInput1.click()">
       <mat-icon>play_circle_filled</mat-icon>
       {{mediaWord.videoName}}
     </button>
@@ -45,11 +45,18 @@
 <div mat-dialog-actions align="center">
   <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
   <div *ngIf="validar( data ); else elseBlock">
-    <button mat-raised-button (click)="addFiles( data )" [mat-dialog-close]="data" cdkFocusInitial>Actualizar</button>
+    <button mat-raised-button (click)="addFiles( data );">
+
+      Actualizar
+    </button>
   </div>
   <ng-template #elseBlock>
     <button mat-raised-button disabled>Actualizar</button>
   </ng-template>
+</div>
+<div *ngIf="validar( data )">
+  <button (click)="data.videoURL = urlVideo.urlFile;
+  data.pictureURL = urlPicture.urlFile" [mat-dialog-close]="data" cdkFocusInitial> ha</button>
 </div>
 
 

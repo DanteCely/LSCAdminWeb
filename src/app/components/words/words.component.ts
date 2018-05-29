@@ -11,6 +11,7 @@ import { ProxyWordsService } from '../../services/proxy-words.service';
 import { Word } from '../../word';
 import { NewWord } from '../../new-word';
 import { MediaWord } from '../../media-word';
+import { URLFile } from '../../urlfile';
 import { Test } from '../../test';
 
 @Component({
@@ -22,7 +23,7 @@ export class WordsComponent implements OnInit {
   words: Word[];
   newWord: NewWord;
 
-  // ****** Table Elements ******
+  // ************************************ Table Elements ************************************
   displayedColumns = ['Palabra', 'Nivel', 'Leccion', 'Media', 'Funcion'];
   dataSource;
 
@@ -59,7 +60,7 @@ export class WordsComponent implements OnInit {
     });
   }
 
-  // ******* Modal Multimedia *******
+  // ************************************* Modal Multimedia *************************************
   openDialog(word: Word): void {
     const dialogRef = this.dialog.open(ShowVideoDialog, {
       width: '700px',
@@ -75,7 +76,7 @@ export class WordsComponent implements OnInit {
     });
   }
 
-  // ******* Modal Edit *******
+  // ************************************* Modal Edit *************************************
   editDialog(word: Word): void {
     const dialogRef = this.dialog.open(EditWordDialog, {
       width: '400px',
@@ -99,7 +100,7 @@ export class WordsComponent implements OnInit {
 }
 export class TooltipOverviewExample {}
 
-// ******* Modal Multimedia dialog *******
+// ************************************* Modal Multimedia dialog *************************************
 @Component({
   selector: 'app-show-video-dialog',
   templateUrl: './show-video-dialog.html'
@@ -117,7 +118,7 @@ export class ShowVideoDialog {
   }
 }
 
-// ******* Modal edit word dialog *******
+// ************************************* Modal edit word dialog *************************************
 @Component({
   selector: 'app-edit-word-dialog',
   templateUrl: './edit-word-dialog.html',
@@ -132,7 +133,9 @@ export class EditWordDialog {
     pictureFile: null,
     pictureName: ''
   };
-  // ****** Validation Elements *******
+  urlVideo: URLFile = null;
+  urlPicture: URLFile = null;
+  // ************************************ Validation Elements *************************************
   levelControl = new FormControl('', [Validators.required]);
   levels_lessons = [
     { lesson: 'Abecedario', level: 'Abecedario y números' },
@@ -171,7 +174,6 @@ export class EditWordDialog {
   }
   onClick(): void {
     console.log(':)');
-
   }
 
   onFileVideo(event) {
@@ -221,25 +223,25 @@ export class EditWordDialog {
     // Video e imagen para agregar
     const newVideo: FormData = new FormData();
     const newPicture: FormData = new FormData();
+
     // Cambiar nombre de video e imagen
     this.mediaWord.videoName = `${word.palabra}.mp4`;
     this.mediaWord.pictureName = `${word.palabra}.jpg`;
-    const espacios = ' ';
+    const espacios = /\ /gi;
     const nuevoValor = '+';
-    this.mediaWord.videoName.replace(espacios, nuevoValor);
-    this.mediaWord.pictureName.replace(espacios, nuevoValor);
-    console.log( this.mediaWord.videoName );
-    console.log( this.mediaWord.pictureName );
-/*
+    this.mediaWord.videoName = this.mediaWord.videoName.replace(espacios, nuevoValor);
+    this.mediaWord.pictureName = this.mediaWord.pictureName.replace(espacios, nuevoValor);
+
     // Empacar video e imagen
     newVideo.append( 'videoFile', this.mediaWord.videoFile, this.mediaWord.videoName.toLowerCase() );
-    newVideo.append( 'pictureFile', this.mediaWord.pictureFile, this.mediaWord.pictureName.toLowerCase() );
+    newPicture.append( 'pictureFile', this.mediaWord.pictureFile, this.mediaWord.pictureName.toLowerCase() );
     // agregar video e imagen para recibir URL (POST)
-    // ****** Agregar Imagen ******
-    this.proxyService.addPicture( newVideo ).subscribe(
+    // ************************************ Agregar Video ************************************
+    this.proxyService.addVideo( newVideo ).subscribe(
       result => {
         if (result.code !== 200) {
           console.log(result);
+           this.urlVideo = result;
         } else {
         }
       },
@@ -247,6 +249,22 @@ export class EditWordDialog {
         console.log(<any>error);
       }
     );
-    */
+    // ************************************ Agregar Imagen ************************************
+    this.proxyService.addPicture( newPicture ).subscribe(
+      result => {
+        if (result.code !== 200) {
+          console.log(result);
+           this.urlPicture = result;
+        } else {
+        }
+      },
+      error => {
+        console.log(<any>error);
+      }
+    );
+  }
+
+  funcion () {
+    console.log('2 :)');
   }
 }

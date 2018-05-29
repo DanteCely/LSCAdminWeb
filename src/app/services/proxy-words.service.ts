@@ -19,4 +19,8 @@ export class ProxyWordsService {
   addPicture(newPicture: FormData): Observable<any> {
     return this.http.post<URLFile>(`${this.LSC_URL}/picture/`, newPicture );
   }
+
+  addVideo(newVideo: FormData): Observable<any> {
+    return this.http.post<URLFile>(`${this.LSC_URL}/video/`, newVideo );
+  }
 }
