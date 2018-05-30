@@ -1,15 +1,8 @@
-<h1 mat-dialog-title align="center">Editar palabra</h1>
-<div mat-dialog-content class="container">
-  <!-- Edit palabra -->
-  <mat-form-field width="200px">
-    <input matInput type="text" placeholder="Palabra" [(ngModel)]="data.palabra" [formControl]="wordControl" />
-    <mat-hint></mat-hint>
-    <mat-error *ngIf="wordControl.hasError('required')"></mat-error>
-    <button mat-button *ngIf="data.palabra" matSuffix mat-icon-button aria-label="Clear" (click)="data.palabra=''">
-      <mat-icon>close</mat-icon>
-    </button>
-  </mat-form-field>
-  <br>
+<mat-card>
+  <h1 mat-dialog-title align="center">{{data.palabra}}</h1>
+</mat-card>
+<br>
+<div mat-dialog-content>
   <!-- Edit nivel y lección -->
   <mat-form-field>
     <mat-select placeholder="Nivel y lección" [formControl]="levelControl" required (selectionChange)="data.nivel = levelControl.value?.level"
@@ -25,19 +18,25 @@
   <br>
   <!-- Edit video -->
   <div>
-    <input style="display: none" type="file" (change)="onFileVideo($event)" #fileInput1>
+    <input style="display: none" type="file" (change)="onFileVideo($event)" #fileInput1 accept="video/mp4">
     <button mat-button color="primary" matTooltip="Cargar video" matTooltipPosition="right" (click)="fileInput1.click()">
       <mat-icon>play_circle_filled</mat-icon>
       {{mediaWord.videoName}}
+    </button>
+    <button mat-button *ngIf="mediaWord.videoName" matSuffix mat-icon-button aria-label="Clear" (click)="closeVideo()">
+      <mat-icon>close</mat-icon>
     </button>
   </div>
   <br>
   <!-- Edit picure -->
   <div>
-    <input style="display: none" type="file" (change)="onFilePicture($event)" #fileInput2>
+    <input style="display: none" type="file" (change)="onFilePicture($event)" #fileInput2 accept="image/jpeg">
     <button mat-button color="primary" matTooltip="Cargar imagen" matTooltipPosition="right" (click)="fileInput2.click()">
       <mat-icon>photo</mat-icon>
       {{mediaWord.pictureName}}
+    </button>
+    <button mat-button *ngIf="mediaWord.pictureName" matSuffix mat-icon-button aria-label="Clear" (click)="closePicture()">
+      <mat-icon>close</mat-icon>
     </button>
   </div>
   <br>
@@ -45,8 +44,7 @@
 <div mat-dialog-actions align="center">
   <button mat-raised-button color="warn" (click)="onNoClick()">Cancelar</button>
   <div *ngIf="validar( data ); else elseBlock">
-    <button mat-raised-button (click)="addFiles( data );">
-
+    <button mat-raised-button (click)="addFiles( data );" [mat-dialog-close]="data" cdkFocusInitial>
       Actualizar
     </button>
   </div>
@@ -54,12 +52,6 @@
     <button mat-raised-button disabled>Actualizar</button>
   </ng-template>
 </div>
-<div *ngIf="validar( data )">
-  <button (click)="data.videoURL = urlVideo.urlFile;
-  data.pictureURL = urlPicture.urlFile" [mat-dialog-close]="data" cdkFocusInitial> ha</button>
-</div>
-
-
 <!-- Copyright 2018 Google Inc. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license -->

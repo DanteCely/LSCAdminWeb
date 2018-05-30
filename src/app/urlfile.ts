@@ -1,3 +1,3 @@
 export class URLFile {
-  urlFile: string;
+  url: string;
 }
