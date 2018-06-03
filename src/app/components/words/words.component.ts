@@ -233,7 +233,7 @@ export class WordsComponent implements OnInit {
 
   eliminarPalabra(word) {
     console.log(word);
-    
+
     const response = confirm('¿Estás seguro de eliminar la palabra?');
     if (response) {
       const words = this.words;
