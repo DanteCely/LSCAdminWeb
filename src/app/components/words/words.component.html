@@ -104,6 +104,7 @@
                 <mat-hint>{{levelControl.value?.level}}</mat-hint>
               </mat-form-field>
               <br>
+              <br>
               <!-- Edit video -->
               <div>
                 <input style="display: none" type="file" (change)="onFileVideo($event)" #fileInput1 accept="video/mp4">
@@ -130,7 +131,7 @@
               <br>
             </div>
             <div mat-dialog-actions align="right">
-              <div *ngIf="validar( newWord ); else elseBlock">
+              <div *ngIf="validar( newWord ) && bloquear(); else elseBlock">
                 <button mat-raised-button (click)="addNewWord( newWord );">
                   Agregar
                 </button>

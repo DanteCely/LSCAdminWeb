@@ -1,3 +1,9 @@
+<style>
+  img {
+      max-width: 90%;
+      max-height: 90%;
+  }
+</style>
 <mat-card>
   <h1 mat-dialog-title align="center">{{data.palabra}}</h1>
 </mat-card>
@@ -8,7 +14,7 @@
       </video>
     </mat-grid-tile>
     <mat-grid-tile>
-      <img src="{{data.pictureURL}}" alt="Imagen no encontrada." width="300px">
+      <img src="{{data.pictureURL}}" alt="Imagen no encontrada.">
     </mat-grid-tile>
   </mat-grid-list>
 <div mat-dialog-actions align="center">

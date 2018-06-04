@@ -29,6 +29,15 @@ export class WordsComponent implements OnInit {
     picture: ''
   };
 
+  // primitive Value
+  _word = '';
+  _level = '';
+  _lesson = '';
+  _video = '';
+  _picture = '';
+
+  block = true;
+
   // ************************************ Table Elements ************************************
   displayedColumns = [
     'Palabra',
@@ -70,12 +79,22 @@ export class WordsComponent implements OnInit {
   ErrSizePicture = 'El tamaño del archivo tiene que ser menor a 300KB';
   MsjPalabra = 'Nueva palabra';
   MsjPalabraDescrip = 'Nuevo concepto en el diccionario';
+  MsjEdit = 'Palabra actualizada';
+  MsjEditDescrip = 'Sus datos han sido modificados';
+  MsjDel = 'Palabra eliminada';
+  MsjDelDescrip = 'Sus datos han sido eliminados';
 
   constructor(
     private proxyService: ProxyWordsService,
     public dialog: MatDialog,
     public snackBar: MatSnackBar
   ) {
+    this.ObtenerPalabras();
+  }
+
+  ngOnInit() {}
+
+  ObtenerPalabras() {
     this.proxyService.getWords().subscribe(
       result => {
         if (result.code !== 200) {
@@ -89,8 +108,6 @@ export class WordsComponent implements OnInit {
       }
     );
   }
-
-  ngOnInit() {}
 
   onFileVideo(event) {
     // Validar tipos de archivo .mp4
@@ -136,6 +153,10 @@ export class WordsComponent implements OnInit {
     this.mediaWord.pictureName = '';
   }
 
+  bloquear() {
+    return this.block;
+  }
+
   validar(word) {
     // Validar campos completos
     const goodWord = word.word !== '' && word.word !== null;
@@ -150,13 +171,23 @@ export class WordsComponent implements OnInit {
   }
 
   addNewWord(word) {
-    // Video e imagen para agregar
+    // bloquear boton
+    this.block = false;
+
+    // Pasar todos los valores a variables primitivas
+    this._word = word.word;
+    this._level = word.level;
+    this._lesson = word.lesson;
+    this._video = word.video;
+    this._picture = word.picture;
+
+    // Inicializar Video e imagen para agregar
     const newVideo: FormData = new FormData();
     const newPicture: FormData = new FormData();
 
     // Cambiar nombre de video e imagen
-    this.mediaWord.videoName = `${word.word}.mp4`;
-    this.mediaWord.pictureName = `${word.word}.jpg`;
+    this.mediaWord.videoName = `${this._word}.mp4`;
+    this.mediaWord.pictureName = `${this._word}.jpg`;
     const espacios = /\ /gi;
     const nuevoValor = '+';
     this.mediaWord.videoName = this.mediaWord.videoName.replace(
@@ -192,22 +223,32 @@ export class WordsComponent implements OnInit {
                 this.urlPicture = result2;
 
                 // Agregar video e imagen
-                word.video = this.urlVideo.url;
-                word.picture = this.urlPicture.url;
-                this.words.push(word);
-
-                // Mensaje de exito
-                this.openSnackBar( this.MsjPalabra, this.MsjPalabraDescrip );
-                this.closeVideo();
-                this.closePicture();
-                this.newWord.word = '';
+                this._video = this.urlVideo.url;
+                this._picture = this.urlPicture.url;
+                // Empacar valores primitivos de nueva palabra
+                const new_word: Word = {
+                  word: this._word,
+                  level: this._level,
+                  lesson: this._lesson,
+                  video: this._video,
+                  picture: this._picture
+                };
                 // ************************************ Agregar Palabra ************************************
-                this.proxyService.addWord(word).subscribe(
+                this.proxyService.addWord(new_word).subscribe(
                   result3 => {
                     if (result3.code !== 200) {
-
-                      /**Poner acciones despues de añadir palabra */
-
+                      // Agregar nueva palabra
+                      this.ObtenerPalabras();
+                      // Mensaje de exito
+                      this.openSnackBar(
+                        this.MsjPalabra,
+                        this.MsjPalabraDescrip
+                      );
+                      // Reiniciar campos
+                      this.closeVideo();
+                      this.closePicture();
+                      this.newWord.word = '';
+                      this.block = true;
                     } else {
                     }
                   },
@@ -232,25 +273,39 @@ export class WordsComponent implements OnInit {
   }
 
   eliminarPalabra(word) {
-    console.log(word);
-
     const response = confirm('¿Estás seguro de eliminar la palabra?');
     if (response) {
       const words = this.words;
+      // ************************************ Eliminar Palabra ************************************
       this.proxyService.deleteWord(word).subscribe(
         res => {
-          console.log(res);
+          // ************************************ Eliminar imagen ************************************
+          this.proxyService.deletePicture(word).subscribe(
+            resPicture => {
+              // Imagen eliminado
+            },
+            (event: any) => {
+              console.log(event.status);
+            }
+          );
+          // ************************************ Eliminar video ************************************
+          this.proxyService.deleteVideo(word).subscribe(
+            resVideo => {
+              // Video eliminado
+            },
+            (event: any) => {
+              console.log(event.status);
+            }
+          );
+          // Mensaje de confirmación
+          this.openSnackBar(this.MsjDel, this.MsjDelDescrip);
+          // Cargar datos obtenidos
+          this.ObtenerPalabras();
         },
         (event: any) => {
           console.log(event.status);
         }
       );
-      for (let i = 0; i < this.words.length; i++) {
-        if (words[i].word === word) {
-          words.splice(i, 1);
-          this.dataSource.data.splice(word);
-        }
-      }
     }
   }
 
@@ -306,7 +361,10 @@ export class WordsComponent implements OnInit {
         this.proxyService.updateWord(word).subscribe(
           data => {
             if (data.code !== 200) {
-              // this.dataSource.data = data;
+              // Agregar nueva palabra
+              this.ObtenerPalabras();
+              // Mensaje de exito
+              this.openSnackBar(this.MsjEdit, this.MsjEditDescrip);
             } else {
             }
           },
@@ -449,63 +507,76 @@ export class EditWordDialog {
     const goodPicture =
       this.mediaWord.pictureName !== '' && this.mediaWord.pictureFile !== null;
 
-    return goodWord && goodLevel && goodLesson && goodVideo && goodPicture;
+    return goodLevel || goodLesson || goodVideo || goodPicture;
   }
 
   addFiles(word) {
-    // Video e imagen para agregar
-    const newVideo: FormData = new FormData();
-    const newPicture: FormData = new FormData();
+    const goodVideo =
+      this.mediaWord.videoName !== '' && this.mediaWord.videoFile !== null;
+    const goodPicture =
+      this.mediaWord.pictureName !== '' && this.mediaWord.pictureFile !== null;
 
-    // Cambiar nombre de video e imagen
-    this.mediaWord.videoName = `${word.palabra}.mp4`;
-    this.mediaWord.pictureName = `${word.palabra}.jpg`;
     const espacios = /\ /gi;
     const nuevoValor = '+';
-    this.mediaWord.videoName = this.mediaWord.videoName.replace(
-      espacios,
-      nuevoValor
-    );
-    this.mediaWord.pictureName = this.mediaWord.pictureName.replace(
-      espacios,
-      nuevoValor
-    );
+    if (goodVideo) {
+      // Video para agregar
+      const newVideo: FormData = new FormData();
+      // Cambiar nombre de video
+      this.mediaWord.videoName = `${word.palabra}.mp4`;
+      this.mediaWord.videoName = this.mediaWord.videoName.replace(
+        espacios,
+        nuevoValor
+      );
+      // Empacar video
+      newVideo.append(
+        'videoFile',
+        this.mediaWord.videoFile,
+        this.mediaWord.videoName.toLowerCase()
+      );
+      // agregar video para recibir URL (POST)
+      // ************************************ Agregar Video ************************************
+      this.proxyService.addVideo(newVideo).subscribe(
+        result => {
+          if (result.code !== 200) {
+            this.urlVideo = result;
+          } else {
+          }
+        },
+        error => {
+          console.log(<any>error);
+        }
+      );
+    }
+    if (goodPicture) {
+      // Imagen para agregar
+      const newPicture: FormData = new FormData();
 
-    // Empacar video e imagen
-    newVideo.append(
-      'videoFile',
-      this.mediaWord.videoFile,
-      this.mediaWord.videoName.toLowerCase()
-    );
-    newPicture.append(
-      'pictureFile',
-      this.mediaWord.pictureFile,
-      this.mediaWord.pictureName.toLowerCase()
-    );
-    // agregar video e imagen para recibir URL (POST)
-    // ************************************ Agregar Video ************************************
-    this.proxyService.addVideo(newVideo).subscribe(
-      result => {
-        if (result.code !== 200) {
-          this.urlVideo = result;
-        } else {
+      // Cambiar nombre de la imagen
+      this.mediaWord.pictureName = `${word.palabra}.jpg`;
+      this.mediaWord.pictureName = this.mediaWord.pictureName.replace(
+        espacios,
+        nuevoValor
+      );
+
+      // Empacar imagen
+      newPicture.append(
+        'pictureFile',
+        this.mediaWord.pictureFile,
+        this.mediaWord.pictureName.toLowerCase()
+      );
+      // agregar imagen para recibir URL (POST)
+      // ************************************ Agregar Imagen ************************************
+      this.proxyService.addPicture(newPicture).subscribe(
+        result => {
+          if (result.code !== 200) {
+            this.urlPicture = result;
+          } else {
+          }
+        },
+        error => {
+          console.log(<any>error);
         }
-      },
-      error => {
-        console.log(<any>error);
-      }
-    );
-    // ************************************ Agregar Imagen ************************************
-    this.proxyService.addPicture(newPicture).subscribe(
-      result => {
-        if (result.code !== 200) {
-          this.urlPicture = result;
-        } else {
-        }
-      },
-      error => {
-        console.log(<any>error);
-      }
-    );
+      );
+    }
   }
 }
