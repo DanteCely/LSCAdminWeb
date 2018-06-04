@@ -507,7 +507,7 @@ export class EditWordDialog {
     const goodPicture =
       this.mediaWord.pictureName !== '' && this.mediaWord.pictureFile !== null;
 
-    return goodLevel || goodLesson || goodVideo || goodPicture;
+    return (goodLevel && goodLesson) && (goodVideo || goodPicture);
   }
 
   addFiles(word) {
