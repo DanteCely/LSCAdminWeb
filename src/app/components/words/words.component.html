@@ -10,7 +10,7 @@
           <div class="tab-content">
             <!-- Table initial -->
             <mat-form-field>
-              <input matInput type="text" placeholder="Buscar" [(ngModel)]="this.value" (keyup)="applyFilter(this.value)">
+              <input matInput type="text" placeholder="Buscar"  [(ngModel)]="this.value" (keyup)="applyFilter(this.value)">
               <button mat-button *ngIf="this.value" matSuffix mat-icon-button aria-label="Clear" (click)="this.value='';applyFilter(this.value);">
                 <mat-icon>close</mat-icon>
               </button>
