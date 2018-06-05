@@ -7,6 +7,6 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'LSC app';
-  version = 'Versión actual: 1.0';
+  version = 'Versión actual: 1.5';
 }
 export class TooltipOverviewExample {}
