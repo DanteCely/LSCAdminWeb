@@ -29,7 +29,7 @@ export class WordsComponent implements OnInit {
     picture: ''
   };
 
-  // Value Filter
+  // value
   value = '';
 
   // primitive Value

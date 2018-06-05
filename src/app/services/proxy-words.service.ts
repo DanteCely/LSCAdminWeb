@@ -11,41 +11,40 @@ import 'rxjs/add/operator/map';
   providedIn: 'root'
 })
 export class ProxyWordsService {
-  LSC_URL = 'http://18.208.61.61:12345';
-  LSC_URL_Local = 'http://192.168.0.10:12345';
+  LSC_URL = 'http://localhost:12345';
 
   constructor(public http: HttpClient) {}
 
   getWords(): Observable<any> {
-    return this.http.get<Word[]>( `${this.LSC_URL_Local}/word/` );
+    return this.http.get<Word[]>( `${this.LSC_URL}/word/` );
   }
 
   addPicture(newPicture: FormData): Observable<any> {
-    return this.http.post<URLFile>( `${this.LSC_URL_Local}/picture/`, newPicture );
+    return this.http.post<URLFile>( `${this.LSC_URL}/picture/`, newPicture );
   }
 
   addVideo(newVideo: FormData): Observable<any> {
-    return this.http.post<URLFile>( `${this.LSC_URL_Local}/video/`, newVideo );
+    return this.http.post<URLFile>( `${this.LSC_URL}/video/`, newVideo );
   }
 
   updateWord(word: Word): Observable<any> {
-    return this.http.put<Word>( `${this.LSC_URL_Local}/word/${word.word}/`, word ).map(res => res);
+    return this.http.put<Word>( `${this.LSC_URL}/word/${word.word}/`, word ).map(res => res);
   }
 
   addWord(word: Word): Observable<any> {
-    return this.http.post<Word>( `${this.LSC_URL_Local}/word/`, word );
+    return this.http.post<Word>( `${this.LSC_URL}/word/`, word );
   }
 
   deleteWord(word: Word): Observable<any> {
-    return this.http.delete( `${this.LSC_URL_Local}/word/${word.word}/`);
+    return this.http.delete( `${this.LSC_URL}/word/${word.word}/`);
   }
 
   deleteVideo(word: Word): Observable<any> {
-    return this.http.delete( `${this.LSC_URL_Local}/video/${word.word}.mp4/`);
+    return this.http.delete( `${this.LSC_URL}/video/${word.word}.mp4/`);
   }
 
   deletePicture(word: Word): Observable<any> {
-    return this.http.delete( `${this.LSC_URL_Local}/picture/${word.word}.jpg/`);
+    return this.http.delete( `${this.LSC_URL}/picture/${word.word}.jpg/`);
   }
 
 }
