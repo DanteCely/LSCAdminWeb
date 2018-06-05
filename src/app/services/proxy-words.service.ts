@@ -11,7 +11,7 @@ import 'rxjs/add/operator/map';
   providedIn: 'root'
 })
 export class ProxyWordsService {
-  LSC_URL = 'http://localhost:12345';
+  LSC_URL = 'http://18.208.61.61:12345';
 
   constructor(public http: HttpClient) {}
 
