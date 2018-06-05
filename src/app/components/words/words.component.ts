@@ -29,6 +29,9 @@ export class WordsComponent implements OnInit {
     picture: ''
   };
 
+  // Value Filter
+  value = '';
+
   // primitive Value
   _word = '';
   _level = '';
