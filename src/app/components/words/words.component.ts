@@ -20,6 +20,7 @@ import { Test } from '../../test';
   styleUrls: ['./words.component.css']
 })
 export class WordsComponent implements OnInit {
+  masterToken = null;
   words: Word[];
   newWord: Word = {
     word: '',
@@ -92,13 +93,28 @@ export class WordsComponent implements OnInit {
     public dialog: MatDialog,
     public snackBar: MatSnackBar
   ) {
-    this.ObtenerPalabras();
+    this.ObtenerMasterToken();
   }
 
   ngOnInit() {}
 
+  ObtenerMasterToken() {
+    this.proxyService.getMasterToken().subscribe(
+      result => {
+        if (result.code !== 200) {
+          this.masterToken = result.token;
+          this.ObtenerPalabras();
+        } else {
+        }
+      },
+      error => {
+        console.log(<any>error);
+      }
+    );
+  }
+
   ObtenerPalabras() {
-    this.proxyService.getWords().subscribe(
+    this.proxyService.getWords( this.masterToken ).subscribe(
       result => {
         if (result.code !== 200) {
           this.words = result;
@@ -215,12 +231,12 @@ export class WordsComponent implements OnInit {
     );
     // agregar video e imagen para recibir URL (POST)
     // ************************************ Agregar Video ************************************
-    this.proxyService.addVideo(newVideo).subscribe(
+    this.proxyService.addVideo(newVideo, this.masterToken).subscribe(
       result => {
         if (result.code !== 200) {
           this.urlVideo = result;
           // ************************************ Agregar Imagen ************************************
-          this.proxyService.addPicture(newPicture).subscribe(
+          this.proxyService.addPicture(newPicture, this.masterToken).subscribe(
             result2 => {
               if (result2.code !== 200) {
                 this.urlPicture = result2;
@@ -237,7 +253,7 @@ export class WordsComponent implements OnInit {
                   picture: this._picture
                 };
                 // ************************************ Agregar Palabra ************************************
-                this.proxyService.addWord(new_word).subscribe(
+                this.proxyService.addWord(new_word, this.masterToken).subscribe(
                   result3 => {
                     if (result3.code !== 200) {
                       // Agregar nueva palabra
@@ -280,10 +296,10 @@ export class WordsComponent implements OnInit {
     if (response) {
       const words = this.words;
       // ************************************ Eliminar Palabra ************************************
-      this.proxyService.deleteWord(word).subscribe(
+      this.proxyService.deleteWord(word, this.masterToken).subscribe(
         res => {
           // ************************************ Eliminar imagen ************************************
-          this.proxyService.deletePicture(word).subscribe(
+          this.proxyService.deletePicture(word, this.masterToken).subscribe(
             resPicture => {
               // Imagen eliminado
             },
@@ -292,7 +308,7 @@ export class WordsComponent implements OnInit {
             }
           );
           // ************************************ Eliminar video ************************************
-          this.proxyService.deleteVideo(word).subscribe(
+          this.proxyService.deleteVideo(word, this.masterToken).subscribe(
             resVideo => {
               // Video eliminado
             },
@@ -361,7 +377,7 @@ export class WordsComponent implements OnInit {
         word.lesson = result.leccion;
         word.video = result.videoURL;
         word.picture = result.pictureURL;
-        this.proxyService.updateWord(word).subscribe(
+        this.proxyService.updateWord(word, this.masterToken).subscribe(
           data => {
             if (data.code !== 200) {
               // Agregar nueva palabra
@@ -408,6 +424,7 @@ export class ShowVideoDialog {
 
 // tslint:disable-next-line:component-class-suffix
 export class EditWordDialog {
+  token = null;
   mediaWord: MediaWord = {
     videoFile: null,
     videoName: '',
@@ -443,7 +460,22 @@ export class EditWordDialog {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public snackBar: MatSnackBar
   ) {
+    this.ObtenerMasterToken();
     ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: 'never' });
+  }
+
+  ObtenerMasterToken() {
+    this.proxyService.getMasterToken().subscribe(
+      result => {
+        if (result.code !== 200) {
+          this.token = result.token;
+        } else {
+        }
+      },
+      error => {
+        console.log(<any>error);
+      }
+    );
   }
 
   openSnackBar(message: string, action: string) {
@@ -538,7 +570,7 @@ export class EditWordDialog {
       );
       // agregar video para recibir URL (POST)
       // ************************************ Agregar Video ************************************
-      this.proxyService.addVideo(newVideo).subscribe(
+      this.proxyService.addVideo(newVideo, this.token).subscribe(
         result => {
           if (result.code !== 200) {
             this.urlVideo = result;
@@ -569,7 +601,7 @@ export class EditWordDialog {
       );
       // agregar imagen para recibir URL (POST)
       // ************************************ Agregar Imagen ************************************
-      this.proxyService.addPicture(newPicture).subscribe(
+      this.proxyService.addPicture(newPicture, this.token).subscribe(
         result => {
           if (result.code !== 200) {
             this.urlPicture = result;

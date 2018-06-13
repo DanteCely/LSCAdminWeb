@@ -15,36 +15,48 @@ export class ProxyWordsService {
 
   constructor(public http: HttpClient) {}
 
-  getWords(): Observable<any> {
-    return this.http.get<Word[]>( `${this.LSC_URL}/word/` );
+  getMasterToken(): Observable<any> {
+    return this.http.get( `${this.LSC_URL}/token/`);
   }
 
-  addPicture(newPicture: FormData): Observable<any> {
-    return this.http.post<URLFile>( `${this.LSC_URL}/picture/`, newPicture );
+  getWords(masterToken): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', masterToken);
+    return this.http.get<Word[]>( `${this.LSC_URL}/word/`, {headers: headers} );
   }
 
-  addVideo(newVideo: FormData): Observable<any> {
-    return this.http.post<URLFile>( `${this.LSC_URL}/video/`, newVideo );
+  addPicture(newPicture: FormData, masterToken): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', masterToken);
+    return this.http.post<URLFile>( `${this.LSC_URL}/picture/`, newPicture, {headers: headers} );
   }
 
-  updateWord(word: Word): Observable<any> {
-    return this.http.put<Word>( `${this.LSC_URL}/word/${word.word}/`, word ).map(res => res);
+  addVideo(newVideo: FormData, masterToken): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', masterToken);
+    return this.http.post<URLFile>( `${this.LSC_URL}/video/`, newVideo, {headers: headers} );
   }
 
-  addWord(word: Word): Observable<any> {
-    return this.http.post<Word>( `${this.LSC_URL}/word/`, word );
+  updateWord(word: Word, masterToken): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', masterToken);
+    return this.http.put<Word>( `${this.LSC_URL}/word/${word.word}/`, word, {headers: headers} ).map(res => res);
   }
 
-  deleteWord(word: Word): Observable<any> {
-    return this.http.delete( `${this.LSC_URL}/word/${word.word}/`);
+  addWord(word: Word, masterToken ): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', masterToken);
+    return this.http.post<Word>( `${this.LSC_URL}/word/`, word, {headers: headers} );
   }
 
-  deleteVideo(word: Word): Observable<any> {
-    return this.http.delete( `${this.LSC_URL}/video/${word.word}.mp4/`);
+  deleteWord(word: Word, masterToken ): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', masterToken);
+    return this.http.delete( `${this.LSC_URL}/word/${word.word}/`, {headers: headers});
   }
 
-  deletePicture(word: Word): Observable<any> {
-    return this.http.delete( `${this.LSC_URL}/picture/${word.word}.jpg/`);
+  deleteVideo(word: Word, masterToken ): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', masterToken);
+    return this.http.delete( `${this.LSC_URL}/video/${word.word}.mp4/`, {headers: headers});
+  }
+
+  deletePicture(word: Word, masterToken ): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', masterToken);
+    return this.http.delete( `${this.LSC_URL}/picture/${word.word}.jpg/`, {headers: headers});
   }
 
 }
